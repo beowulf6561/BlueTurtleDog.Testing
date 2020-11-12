@@ -45,7 +45,7 @@ namespace BlueTurtleDog.Testing.CreateCsvForPortfolio
                 .ToList();
 
             // Init with header row
-            var buffer = new StringBuilder("Title,SKU,Image,Description,Year");
+            var buffer = new StringBuilder("Title,SKU,Image,Description,Year\n");
 
             foreach (var item in finerworksInventory)
             {
