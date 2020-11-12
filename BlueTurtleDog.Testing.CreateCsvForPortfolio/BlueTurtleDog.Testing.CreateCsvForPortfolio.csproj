@@ -50,5 +50,11 @@
     <None Include="App.config" />
     <None Include="finerworks list_images response.json" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BlueTurtleDog.Testing.Data\BlueTurtleDog.Testing.Data.csproj">
+      <Project>{8760377d-715c-41ac-bad1-45237b95f962}</Project>
+      <Name>BlueTurtleDog.Testing.Data</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
