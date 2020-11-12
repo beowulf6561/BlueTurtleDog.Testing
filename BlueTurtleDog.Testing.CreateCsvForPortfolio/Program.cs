@@ -1,5 +1,5 @@
 ﻿using FinerWorks.API.List_Images;
-
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -43,6 +43,32 @@ namespace BlueTurtleDog.Testing.CreateCsvForPortfolio
                     total_price = fileAndProduct.p.total_price
                 })
                 .ToList();
+
+            // Init with header row
+            var buffer = new StringBuilder("Title,SKU,Image,Description,Year");
+
+            foreach (var item in finerworksInventory)
+            {
+                // Title
+                buffer.Append($"{item.name},");
+
+                // SKU
+                buffer.Append($"{item.sku},");
+
+                // Image
+                buffer.Append($"{item.image_url_1},");
+
+                // Description
+                // TODO: Replace with description from the Products collection in Wix
+                buffer.Append($"{item.name},");
+
+                // Year
+                buffer.Append($"{item.File.date_added.Year}");
+
+                buffer.Append("\n");
+            }
+
+            System.Diagnostics.Debug.Print(buffer.ToString());
         }
     }
 }
