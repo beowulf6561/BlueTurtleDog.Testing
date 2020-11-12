@@ -51,8 +51,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="finerworks list_images response.json" />
+    <None Include="finerworks list_images response.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
+    <None Include="Portfolio Template.csv" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BlueTurtleDog.Testing.Data\BlueTurtleDog.Testing.Data.csproj">
