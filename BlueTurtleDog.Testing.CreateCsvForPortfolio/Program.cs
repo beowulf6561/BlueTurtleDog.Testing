@@ -1,4 +1,5 @@
-﻿using FinerWorks.API.List_Images;
+﻿using BlueTurtleDog.Testing.ReadJson;
+using FinerWorks.API.List_Images;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -6,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Wix.Collections;
 
 namespace BlueTurtleDog.Testing.CreateCsvForPortfolio
 {
@@ -45,30 +47,64 @@ namespace BlueTurtleDog.Testing.CreateCsvForPortfolio
                 .ToList();
 
             // Init with header row
-            var buffer = new StringBuilder("Title,SKU,Image,Description,Year\n");
+            var buffer = new List<WixPortfolioImportRowModel>();
 
             foreach (var item in finerworksInventory)
             {
-                // Title
-                buffer.Append($"{item.name},");
+                var row = new WixPortfolioImportRowModel()
+                {
+                    Title = item.name,
+                    SKU = item.sku,
+                    // TODO: Add price to portfolio
+                    Image = item.File.file_thumbnail_uri,
+                    // TODO: Replace with description from the Products collection in Wix
+                    Description = "This will be description from Wix:\nA {paper/canvas} print of my original oil painting on...mounted....",
+                    Year = item.File.date_added.Year.ToString(),
+                };
 
-                // SKU
-                buffer.Append($"{item.sku},");
+                // Gallery
+                var galleryImage = new GalleryFieldImage()
+                {
+                    title = item.File.title,
+                    src = $"{item.File.file_preview_uri}#originWidth={item.File.pix_w}&originHeight={item.File.pix_h}"
+                };
+                row.Gallery.Add(galleryImage);
 
-                // Image
-                buffer.Append($"{item.image_url_1},");
-
-                // Description
-                // TODO: Replace with description from the Products collection in Wix
-                buffer.Append($"{item.name},");
-
-                // Year
-                buffer.Append($"{item.File.date_added.Year}");
-
-                buffer.Append("\n");
+                buffer.Add(row);
             }
 
+            WriteCsv(buffer);
+
             System.Diagnostics.Debug.Print(buffer.ToString());
+        }
+
+        private static void WriteCsv(List<WixPortfolioImportRowModel> buffer)
+        {
+            var CsvFactory = new CsvHelper.Factory();
+            var configuration = new CsvHelper.Configuration.CsvConfiguration(System.Globalization.CultureInfo.CurrentCulture);
+
+            // Configure CSV reader
+            configuration.DetectColumnCountChanges = true;
+            configuration.HasHeaderRecord = true;
+            configuration.IgnoreBlankLines = true;
+            configuration.TrimOptions = CsvHelper.Configuration.TrimOptions.Trim;
+            configuration.Delimiter = ",";
+            configuration.IgnoreReferences = false;
+
+            // Map properties of row model to field headers in CSV file
+            configuration.RegisterClassMap<WixPortfolioImportCsvRowMap>();
+
+            var dateStamp = System.DateTime.Now.ToString("yyyy-MM-dd HHmmss");
+            var filename = $"{dateStamp} - Portfolio products import.csv";
+            using (var txtreader = new StreamWriter(filename))
+            {
+                using (var csv = CsvFactory.CreateWriter(txtreader, configuration))
+                {
+                    csv.WriteRecords(buffer);
+                }
+
+                txtreader.Close();
+            }
         }
     }
 }
