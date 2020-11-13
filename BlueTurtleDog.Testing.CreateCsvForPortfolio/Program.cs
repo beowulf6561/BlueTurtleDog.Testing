@@ -55,7 +55,7 @@ namespace BlueTurtleDog.Testing.CreateCsvForPortfolio
                 {
                     Title = item.name,
                     SKU = item.sku,
-                    // TODO: Add price to portfolio
+                    Price = item.total_price,
                     Image = item.File.file_thumbnail_uri,
                     // TODO: Replace with description from the Products collection in Wix
                     Description = "This will be description from Wix:\nA {paper/canvas} print of my original oil painting on...mounted....",

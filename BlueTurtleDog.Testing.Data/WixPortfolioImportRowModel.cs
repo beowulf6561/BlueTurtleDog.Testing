@@ -8,6 +8,11 @@ namespace BlueTurtleDog.Testing.ReadJson
     {
         public string Title { get; set; }
         public string SKU { get; set; }
+        public double Price { get; set; }
+        public string PriceOutput 
+        { 
+            get { return this.Price.ToString("C2"); }
+        }
         public string Image { get; set; }
         public string Description { get; set; }
         public string Year { get; set; }
